@@ -19,6 +19,7 @@ use Illuminate\Cache\Repository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rules\Password;
+use Jeffgreco13\FilamentBreezy\Livewire\BrowserSessions;
 use Jeffgreco13\FilamentBreezy\Livewire\PersonalInfo;
 use Jeffgreco13\FilamentBreezy\Livewire\SanctumTokens;
 use Jeffgreco13\FilamentBreezy\Livewire\TwoFactorAuthentication;
@@ -57,6 +58,8 @@ class BreezyCore implements Plugin
     protected $sanctumTokens = false;
 
     protected $sanctumPermissions = ['create', 'view', 'update', 'delete'];
+
+    protected $browserSessions = false;
 
     protected ?string $customMyProfilePageClass = null;
 
@@ -110,6 +113,12 @@ class BreezyCore implements Plugin
                 Livewire::component('two_factor_authentication', TwoFactorAuthentication::class);
                 $this->myProfileComponents([
                     'two_factor_authentication' => TwoFactorAuthentication::class,
+                ]);
+            }
+            if ($this->browserSessions) {
+                Livewire::component('browser_sessions', BrowserSessions::class);
+                $this->myProfileComponents([
+                    'browser_sessions' => BrowserSessions::class,
                 ]);
             }
 
@@ -348,5 +357,12 @@ class BreezyCore implements Plugin
     protected function getMyProfilePageClass(): string
     {
         return $this->customMyProfilePageClass ?? Pages\MyProfilePage::class;
+    }
+
+    public function enableBrowserSessions(bool $condition = true)
+    {
+        $this->browserSessions = $condition;
+
+        return $this;
     }
 }
